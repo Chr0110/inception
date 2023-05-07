@@ -1,0 +1,16 @@
+# Use Debian as the base image
+FROM debian:latest
+
+# Update the package manager and install Nginx
+RUN apt-get update && apt-get install -y nginx
+
+# Copy Nginx configuration files
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY index.html /var/www/html
+# COPY default.conf /etc/nginx/conf.d/default.conf
+
+# Expose the default Nginx port
+EXPOSE 80
+
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]
