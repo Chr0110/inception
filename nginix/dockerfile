@@ -1,7 +1,0 @@
-FROM debian:buster
-RUN apt-get update && apt-get install -y nginx
-COPY index.html /usr/share/nginx/html
-CMD ["nginx", "-g", "daemon off;"]
-COPY certificate.crt /etc/ssl/
-COPY private.key /etc/ssl/
-EXPOSE 443
