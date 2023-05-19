@@ -1,0 +1,5 @@
+FROM debian:buster
+ENV MYSQL_ROOT_PASSWORD mehdidb
+ENV MYSQL_DATABASE wordpress
+ENV MYSQL_USER eradi-
+ENV MYSQL_PASSWORD eradi-db

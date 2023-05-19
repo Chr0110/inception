@@ -1,0 +1,2 @@
+FROM debian:buster
+COPY ./wordpress/wp-config.php /var/www/html/wp-config.php
