@@ -36,7 +36,16 @@ services:
 
 volumes:
   mariadb_data:
+   driver: local
+   driver_opts:
+    type: none
+    device: /home/eradi-/data/mariadb
+    o: bind
   wordpress_data:
-
+   driver: local
+   driver_opts:
+    type: none
+    device: /home/eradi-/data/wordpress
+    o: bind
 networks:
   mynetwork:

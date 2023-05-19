@@ -1,20 +1,13 @@
-#!/bin/bash
-
-# Start the services
-/etc/init.d/nginx start
 /etc/init.d/mysql start
+
 /etc/init.d/php7.3-fpm start
 
-# Configure MySQL
-mysql -u root -e "CREATE DATABASE wordpress;"
-mysql -u root -e "CREATE USER 'wordpress'@'%' IDENTIFIED BY 'password';"
-mysql -u root -e "GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress'@'%';"
-mysql -u root -e "FLUSH PRIVILEGES;"
+cd /var/www/html/wordpress
 
-# Stop the services
-/etc/init.d/nginx stop
+wp core download --allow-root
+
+wp core config --dbname='mysql' --dbuser='eradi'- --dbpass='eradisql' --dbhost='mariadb' --allow-root
+
+wp core install --url='eradi-.42.fr' --title=DopamInception --admin_user='eradi-' --admin_password='mehdi' --admin_email='zoroz8590@gmail.com' --allow-root
 /etc/init.d/mysql stop
 /etc/init.d/php7.3-fpm stop
-
-# Start the services in the foreground
-nginx -g "daemon off;"
