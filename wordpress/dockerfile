@@ -1,2 +1,22 @@
 FROM debian:buster
+
+# Install required packages
+RUN apt-get update && apt-get install -y \
+    mariadb-server \
+    php7.3 \
+    php7.3-fpm \
+    php7.3-mysql \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy script.sh to the container
+# RUN mkdir -p /home/script/
+COPY ./wordpress/script.sh /var/www/html/wordpress
+COPY    ./wordpress/www.conf /etc/php/7.3/fpm/pool.d/www.conf
+# Set execution permissions for the script
+# RUN chmod +x ./wordpress/script.sh
+
+# Copy wp-config.php to the container
 COPY ./wordpress/wp-config.php /var/www/html/wp-config.php
+
+# Start the services using the script
+CMD ["sh", "/var/www/html/wordpress/script.sh"]

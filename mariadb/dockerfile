@@ -1,5 +1,51 @@
+# FROM debian:buster
+# RUN apt-get update && \
+#     apt-get install -y mariadb-server && \
+#     rm -rf /var/lib/apt/lists/*
+# COPY ./mariadb/mariadb.conf /etc/mysql/mariadb.conf.d/
+# ENV MYSQL_ROOT_PASSWORD mehdidb
+# ENV MYSQL_DATABASE wordpress
+# ENV MYSQL_USER eradi-
+# ENV MYSQL_PASSWORD eradi-db
+# RUN /etc/init.d/mysql start && \
+#     mysql -u root -peradidb@123 -e "CREATE DATABASE mydb;" && \
+#     mysql -u root -peradidb@123 -e "CREATE USER '${MYSQL_ADMIN_USER}'@'%' IDENTIFIED BY '${MYSQL_ADMIN_PASSWORD}';" && \
+#     mysql -u root -peradidb@123 -e "GRANT ALL PRIVILEGES ON mydb.* TO '${MYSQL_USER}'@'%';" && \
+#     mysql -u root -peradidb@123 -e "GRANT ALL PRIVILEGES ON *.* TO '${MYSQL_ADMIN_USER}'@'%' WITH GRANT OPTION;" && \
+#     mysql -u root -peradidb@123 -e "FLUSH PRIVILEGES;" && \
+#     /etc/init.d/mysql stop
+# EXPOSE 3306
+# # CMD ["mysqld"]
+
 FROM debian:buster
-ENV MYSQL_ROOT_PASSWORD mehdidb
-ENV MYSQL_DATABASE wordpress
-ENV MYSQL_USER eradi-
-ENV MYSQL_PASSWORD eradi-db
+
+# Install necessary packages
+RUN apt-get update && \
+    apt-get install -y mariadb-server && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copy custom config file
+COPY ./mariadb/mysql.conf /etc/mysql/mariadb.conf.d/
+
+# Set environment variables for root password and users
+ENV MYSQL_ROOT_PASSWORD=mehdidb@123
+ENV MYSQL_USER=user
+ENV MYSQL_PASSWORD=userdb@123
+ENV MYSQL_ADMIN_USER=eradi-
+ENV MYSQL_ADMIN_PASSWORD=eradidb@123
+
+# Start MySQL server, create databases, and grant permissions
+RUN /etc/init.d/mysql start && \
+    mysql -u root -peradidb@123 -e "CREATE DATABASE mydb;" && \
+    mysql -u root -peradidb@123 -e "CREATE USER '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';" && \
+    mysql -u root -peradidb@123 -e "CREATE USER '${MYSQL_ADMIN_USER}'@'%' IDENTIFIED BY '${MYSQL_ADMIN_PASSWORD}';" && \
+    mysql -u root -peradidb@123 -e "GRANT ALL PRIVILEGES ON mydb.* TO '${MYSQL_USER}'@'%';" && \
+    mysql -u root -peradidb@123 -e "GRANT ALL PRIVILEGES ON *.* TO '${MYSQL_ADMIN_USER}'@'%' WITH GRANT OPTION;" && \
+    mysql -u root -peradidb@123 -e "FLUSH PRIVILEGES;" && \
+    /etc/init.d/mysql stop
+
+# Expose the MySQL port
+EXPOSE 3306
+
+# Start MySQL server when container is started
+CMD ["mysqld"]
