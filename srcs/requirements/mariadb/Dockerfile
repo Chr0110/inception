@@ -4,7 +4,12 @@ RUN apt-get update -y
 RUN apt-get upgrade -y
 RUN apt-get install -y mariadb-server
 RUN mkdir -p /var/run/mysql
+#Sets the ownership of the MySQL runtime directory to the "mysql" user and group.
 RUN chown -R mysql:mysql /var/run/mysql
+#Starts the MySQL service, 
+#creates a database, 
+#sets the root password,
+#grants privileges to a specific user for the specified database.
 RUN service mysql start \
 &&  mysql -u root -e   "CREATE DATABASE IF NOT EXISTS $MYSQL_DB_DATABASE ; \
                         ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL_DB_ROOT_PASSWORD' ; \
@@ -13,4 +18,5 @@ RUN service mysql start \
 
 COPY ./conf/50-server.cnf ./etc/mysql/mariadb.conf.d/50-server.cnf
 EXPOSE 3306
-CMD ["mysqld", "--bind-address=0.0.0.0"]
+#to allow connections from any IP address.
+CMD ["mysqld", "--bind-address=0.0.0.0"] 

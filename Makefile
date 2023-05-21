@@ -7,6 +7,6 @@ down:
 		docker-compose -f srcs/docker-compose.yml down --rmi all --volumes --remove-orphans
 clean: down
 fclean: clean
-		sudo rm -rf /home/eradi-/data/wordpress/*
-		sudo rm -rf /home/eradi-/data/mariadb/*		
+		rm -rf /home/eradi-/data/wordpress/*
+		rm -rf /home/eradi-/data/mariadb/*		
 re: fclean all
